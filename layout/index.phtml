@@ -1,0 +1,253 @@
+<?php
+/**
+ * Скелет сайта.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+$output_order = $this->macros('emarket', 'cart');
+$output_order_items = $output_order['items'];
+
+?>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<?= $this->render($variables, 'layout/head') ?>
+	</head>
+    <body>
+		<?= $this->render($variables, 'layout/header/index') ?>
+		<?= $this->render($variables, 'layout/main') ?>
+		<?= $this->render($variables, 'layout/footer/index') ?>
+        
+        
+<!-- Попап товар -->
+<div class="cart-popup popup">
+<!-- div тёмного фона -->
+	<div class="cart-popup__click popup__click">
+	</div>
+		<div class="cart-popup__content popup__content">
+			<button type="button" class="cart-popup__close popup__close">
+				<svg width="25" height="25">
+					<use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#delete"></use>
+				</svg>
+			</button>
+			<h2 class="cart-popup__title">Товар добавлен в корзину</h2>
+			<div class="cart-popup__row">
+				<a href="#" class="cart-popup__image">
+					<picture>
+						<!--<source type="image/webp" srcset="img/goods/4sira.webp" />-->
+						<img src="" width="330" height="240" alt="" />
+					</picture>
+				</a>
+
+				<div class="cart-popup__info">
+					<a href="#" class="cart-popup__name"></a>
+
+					<p class="cart-popup__price"> ₽</p>
+					<div class="cart-popup__quantity quantity">
+						<button class="quantity__button quantity__button--less">
+							<svg width="16" height="2">
+								<use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#minus"></use>
+							</svg>
+						</button>
+						<input type="text" value="1" class="quantity__number"  onkeypress="return (event.charCode >= 48 && event.charCode <= 57 && /^\d{0,3}$/.test(this.value));"/>
+						<button class="quantity__button quantity__button--more">
+							<svg width="16" height="16">
+								<use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#plus"></use>
+							</svg>
+						</button>
+					</div>
+					<div class="cart-popup__row cart-popup__row_button">
+						<a href="http://livepizza.ru/shop/" class="cart-popup__button button">Продолжить покупки</a>
+						<a href="http://livepizza.ru/emarket/cart/" class="cart-popup__button button">Оформить</a>
+					</div>
+			     </div>
+			</div>
+
+			<div class="cart-popup__toping toping">
+				<h2 class="toping__title">Добавить топпинги:</h2>
+
+				<form action="" class="toping__form">
+					<div class="toping__checkbox-list">
+						<!-- Топинг -->
+						<div class="cart-popup__checkbox toping__checkbox checkbox">
+                            <input type="checkbox" name="toping" id="toping-file-50" class="toping__input checkbox__input" value="">
+							<label for="toping-file-50" class="toping__label checkbox__label">
+								<span class="toping__name"><!--Филе курицы 50 г--></span>
+								<span class="toping__price"> ₽</span>
+							</label>
+						</div>
+						<!-- /Топинг -->
+					</div>
+				</form>
+			</div>
+		</div>
+</div>
+
+<!-- /Попап товар -->
+<div class="cart-success popup">
+	<div class="cart-success__click popup__click"></div>
+	<div class="cart-success__content popup__content">
+		<button type="button" class="cart-success__close popup__close">
+			<svg width="25" height="25">
+				<use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#delete"></use>
+			</svg>
+		</button>
+		<h2 class="cart-popup__title">Товар добавлен в корзину</h2>
+	</div>
+</div>
+
+
+<!-- Попап меню -->
+<div class="burger-menu popup">
+	<div class="burger-menu__click popup__click"></div>
+	<div class="burger-menu__content popup__content">
+		<button type="button" class="burger-menu__close popup__close">
+			<svg width="25" height="25">
+				<use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#delete"></use>
+			</svg>
+		</button>
+		<ul class="burger-menu__site-list site-list">
+			<?=$this->render($this->macros('menu', 'draw', array('footer_menu')), 'menu/hmenu')?>
+		</ul>
+	</div>
+</div>
+<!-- /Попап меню -->
+
+<!-- Загрузка -->
+<div class="load-popup popup">
+	<div class="load-popup__click popup__click"></div>
+	<div class="load-popup__content">
+		<div class="pizza-slice slice-1">
+			<div class="border">
+				<div class="crust"></div>
+				<div class="cheese">
+					<div class="peperoni p-1"></div>
+					<div class="peperoni p-2"></div>
+					<div class="peperoni p-3"></div>
+					<div class="olive o-1"></div>
+					<div class="olive o-3"></div>
+					<div class="olive o-4"></div>
+					<div class="olive o-6"></div>
+					<div class="olive o-7"></div>
+				</div>
+			</div>
+		</div>
+		<div class="pizza-slice slice-2">
+		<div class="border">
+		  <div class="crust"></div>
+		  <div class="cheese">
+		    <div class="peperoni p-1"></div>
+		    <div class="peperoni p-2"></div>
+		    <div class="peperoni p-3"></div>
+		    <div class="olive o-1"></div>
+		    <div class="olive o-2"></div>
+		    <div class="olive o-3"></div>
+		    <div class="olive o-6"></div>
+		    <div class="olive o-7"></div>
+		  </div>
+		</div>
+		</div>
+		<div class="pizza-slice slice-3">
+		<div class="border">
+		  <div class="crust"></div>
+		  <div class="cheese">
+		    <div class="peperoni p-1"></div>
+		    <div class="peperoni p-2"></div>
+		    <div class="peperoni p-3"></div>
+		    <div class="olive o-3"></div>
+		    <div class="olive o-4"></div>
+		    <div class="olive o-5"></div>
+		    <div class="olive o-6"></div>
+		  </div>
+		</div>
+		</div>
+		<div class="pizza-slice slice-4">
+		<div class="border">
+		  <div class="crust"></div>
+		  <div class="cheese">
+		    <div class="peperoni p-1"></div>
+		    <div class="peperoni p-2"></div>
+		    <div class="peperoni p-3"></div>
+		    <div class="olive o-1"></div>
+		    <div class="olive o-2"></div>
+		    <div class="olive o-3"></div>
+		    <div class="olive o-4"></div>
+		  </div>
+		</div>
+		</div>
+		<div class="pizza-slice slice-5">
+		<div class="border">
+		  <div class="crust"></div>
+		  <div class="cheese">
+		    <div class="peperoni p-1"></div>
+		    <div class="peperoni p-2"></div>
+		    <div class="peperoni p-3"></div>
+		    <div class="olive o-1"></div>
+		    <div class="olive o-2"></div>
+		    <div class="olive o-6"></div>
+		    <div class="olive o-7"> </div>
+		  </div>
+		</div>
+		</div>
+		</div>
+	</div>
+</div>
+<!-- Загрузка -->
+
+
+            
+     	<script src="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>js/jquery.cookie.js"></script>
+    	<script src="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>lib/slick/slick.min.js"></script>
+    	<script src="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>js/main.js"></script>
+        <script src="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>js/toppings_try_2.js"></script>
+        
+        
+        
+        
+        
+        
+        
+        <script>
+(function(w, d, s, h, id) {
+    w.roistatProjectId = id; w.roistatHost = h;
+    var p = d.location.protocol == "https:" ? "https://" : "http://";
+    var u = /^.*roistat_visit=[^;]+(.*)?$/.test(d.cookie) ? "/dist/module.js" : "/api/site/1.0/"+id+"/init";
+    var js = d.createElement(s); js.charset="UTF-8"; js.async = 1; js.src = p+h+u; var js2 = d.getElementsByTagName(s)[0]; js2.parentNode.insertBefore(js, js2);
+})(window, document, 'script', 'cloud.roistat.com', '6362aa5c05fce542bfc09b5d96b7f128');
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(67527295, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/67527295" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+
+<!-- Begin LeadBack code {literal} -->
+<script>
+    var _emv = _emv || [];
+    _emv['campaign'] = 'da5ce581b1ebc664b77cea8a';
+    
+    (function() {
+        var em = document.createElement('script'); em.type = 'text/javascript'; em.async = true;
+        em.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'leadback.ru/js/leadback.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(em, s);
+    })();
+</script>
+<!-- End LeadBack code {/literal} -->
+
+        
+	</body>
+</html>

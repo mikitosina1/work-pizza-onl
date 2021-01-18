@@ -1,0 +1,27 @@
+<?php
+/**
+ * Страница контента.
+ * Страница по умолчанию обрабатывается по отдельному шаблону `content/home/index`.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ * @var iUmiHierarchyElement $page
+ */
+
+$page = $variables['page'];
+
+?>
+
+<?php if ($this->isHomePage($variables)): ?>
+	<?= $this->render($variables, 'content/home/index') ?>
+<?php elseif ($this->is404Page($variables)): ?>
+	<?= $this->render($variables, 'content/notfound') ?>
+<?php else:?>
+<section class="contacts">
+	<div class="contacts__wrapper wrapper">
+        <div class="contacts__row">
+            <div class="contacts__item"><?= $page->getValue('content') ?></div>
+        </div>
+    </div>
+</section>
+<?php endif;?>

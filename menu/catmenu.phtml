@@ -1,0 +1,53 @@
+<?php
+/**
+ * Меню всплывающее
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+$variables['pageId'] = 228;
+$catalog = $this->getChildCategories($variables);
+$childCategoryList = $catalog['items'];
+?>
+<!-- Меню -->
+    <section class="nav-menu nav-menu--home">
+    <div class="nav-menu__wrapper wrapper">
+    	<nav class="nav-menu__nav-box">
+    			<button type="button" class="nav-menu__toggle hamburger">
+    				<span class="hamburger__box">
+            <span class="hamburger__inner"></span>
+          </span>
+    				<span class="nav-menu__toggle-text">Наше меню</span>
+    			</button>
+                
+    			<div class="nav-menu__navigation">
+    				<ul class="nav-menu__list nav-menu__list--catalog">
+                    <li class="nav-manu__item">
+    						<a href="<?= $this->getCommonVar('mydomain')?>/shop/">
+    							<span class="nav-menu__icon">
+    					  			<svg width="35" height="29">
+    			                         <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#dish"></use>
+    			                  </svg>
+    							</span>
+    		                      <span class="nav-manu__name">Все блюда</span>
+    						</a>
+    					</li>
+                        <?php foreach($childCategoryList as $values) :?>
+    					<li class="nav-manu__item">
+    						<a href="<?= $this->getCommonVar('mydomain')?><?= $values->link?>">
+    							<span class="nav-menu__icon">
+    								<svg width="35" height="29">
+    			                         <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#<?= $values->getValue('id_svg');?>"></use>
+                                    </svg>
+    							</span>
+                                <span class="nav-manu__name"><?= $values->getName();?></span>
+    						</a>
+    					</li>
+                        <?php endforeach;?>
+    				</ul>
+    			</div>
+    			
+    		</nav>
+    </div>
+    </section>
+    <!-- /Меню -->

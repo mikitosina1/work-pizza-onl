@@ -1,0 +1,13 @@
+<?php
+/**
+ * Большая пицца меню.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+ ?>
+<?php foreach($variables as $pvalues):?>
+    <li class="site-nav__item">
+    	<a href="<?= $pvalues['link'];?>"><?= $pvalues['text'];?></a>
+    </li>
+<?php endforeach;?>

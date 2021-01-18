@@ -1,0 +1,40 @@
+<?php
+/**
+ * Страница "Контакты":
+ *   - блок информации о владельце сайта
+ *   - форма обратной связи
+ * 
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+$page = $variables['page'];
+$settings = $this->getSettingsContainer();
+$settingsId = $settings->getId();
+?>
+
+<section class="contacts">
+	<div class="contacts__wrapper wrapper">
+          <h1 class="title"><?=$page->getValue('h1')?></h1>
+          <div class="contacts__row">
+            <div class="contacts__column">
+              <h2 class="contacts__title">Служба доставки Live Pizza</h2>
+              <div class="contacts__item"><a href="tel:<?=$settings->getValue('telefon')?>"><?=$settings->getValue('telefon')?></a></div>
+              <div class="contacts__item">Город: <span><?=$settings->getValue('contacts-address')?></span></div>
+              <div class="contacts__item">Адрес: <span><?=$settings->getValue('adres')?></span></div>
+            </div>
+        
+            <div class="contacts__column">
+              <h2 class="contacts__title">Наши реквизиты</h2>
+              <div class="contacts__item">ИП: <span><?=$settings->getValue('eeep')?></span></div>
+              <div class="contacts__item">ИНН: <span><?=$settings->getValue('inn')?></span></div>
+              <div class="contacts__item">ОГРН: <span><?=$settings->getValue('ogrn')?></span></div>
+              <div class="contacts__item">Номер лицевого счёта: <span><?=$settings->getValue('rasschtnyj_schet')?></span></div>
+              <div class="contacts__item">БИК: <span><?=$settings->getValue('bik')?></span></div>
+            </div>
+          </div>
+          <div class="contacts__map">
+            <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A9a9007e12328112d7164abdf6eafe129612da51ffc64c3a0922617775c2708ba&amp;width=100%25&amp;height=484&amp;lang=ru_RU&amp;scroll=false"></script>
+          </div>
+	</div>
+</section>
+

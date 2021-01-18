@@ -1,0 +1,46 @@
+<?php
+/**
+ * Основной контент страницы.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+$class_home = $this->isHomePage($variables) ? 'class="home"' : '';
+?>
+
+<main <?=$class_home;?>>
+<?php if (!$this->isHomePage($variables)):?>
+<?php
+$back_button = $this->macros('core', 'navibar');
+$count_parents = count($variables['parents'])-1;
+$parents_hierarchy = $variables['parents'][$count_parents];
+$link = $this->getCommonVar('mydomain').$parents_hierarchy->link;
+?>
+<!-- Меню -->
+<section class="nav-menu">
+	<div class="nav-menu__wrapper wrapper">
+		<nav class="nav-menu__nav-box">
+				<a href="<?=$link;?>" class="nav-menu__back button-back">
+					<svg width="18" height="12">
+                        <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#arrow-prew"></use>
+                    </svg>
+					<span class="nav-menu__toggle-text">Назад</span>
+				</a>
+			</nav>
+            <ul class="breadcrumbs__list">
+            <?php foreach($back_button['items'] as $bcvalue):
+                $name = $bcvalue['text'];
+                $bclink = $bcvalue['link'];
+            ?>
+            <li class="breadcrumbs__item">
+            <a href="<?=$this->getCommonVar('mydomain').$bclink;?>"><?=$name;?></a>
+            </li>
+            <?php endforeach;?>
+            </ul>
+	</div>
+</section>
+	<!-- /Меню -->
+<?php endif;?>
+	<?= $this->render($this->macros('system', 'listErrorMessages'), 'library/errors') ?>
+	<?= $this->render($variables, "{$variables['module']}/{$variables['method']}") ?>
+</main>

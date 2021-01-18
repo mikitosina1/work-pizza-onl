@@ -1,0 +1,28 @@
+<?php
+/**
+ * Лента новостей.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ * @var iUmiHierarchyElement $rubric
+ */
+
+$rubric = $variables['page'];
+$newsList = $this->getRubricNews($rubric);
+$page_id = $rubric->getId();
+//print_r($page_id);
+?>
+
+<?php if($page_id == 312):?>
+	<div class="action__wrapper wrapper">
+		<ul class="action__list">
+            <?= $this->render($newsItem, 'news/rubric_item') ?>
+		</ul>
+	</div>    
+<?php else:?>
+    <div class="action__wrapper wrapper">
+    	<ul class="action__list">
+            <?= $this->render($newsItem, 'news/rubric_item_news') ?>
+    	</ul>
+    </div>  
+<?php endif; ?>

@@ -1,0 +1,71 @@
+<?php
+/**
+ * Шапка сайта pizza:
+ *   - Все всплывающие окна на сайте (скрыты по умолчанию)
+ *   - Меню основных страниц сайта, разбитое на две части - левую и правую
+ *   - Блок с логотипом сайта, формой "Заказать звонок", режимом работы и корзиной товаров
+ *   - Блок с меню каталога товаров, формой поиска, кнопкой сравнения товаров, кнопки входа на сайт (или панели управления пользователя)
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+ $settings = $this->getSettingsContainer();
+ //Макрос для отображения содержимого заказа в корзину
+$output_basket = $this->macros('emarket', 'cart');
+?>
+<!-- Шапка -->
+<header class="page-header">
+	<div class="page-header__wrapper wrapper">
+
+		<button class="page-header__hamburger hamburger">
+			<span class="hamburger__box">
+	      	<span class="hamburger__inner"></span>
+	      </span>
+	    </button>
+
+		<a href="<?= $this->getCommonVar('mydomain')?>" class="page-header__logo logo">
+			<picture>
+					<!--<source type="image/webp" srcset="img/logo/logo.webp">-->
+				<img src="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/logo/logo.png" width="114" height="60" alt="Live Pizza" />
+			</picture>
+		</a>
+
+		<a href="tel:<?=$settings->getValue('telefon')?>" class="page-header__phone phone">
+			<svg width="25" height="25">
+        <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#call"></use>
+      </svg>
+			<?=$settings->getValue('telefon')?>
+		</a>
+			
+			<div class="page-header__info">
+				<address class="page-header__address"><?=$settings->getValue('adres')?></address>
+				<span>|</span>
+				<p class="page-header__work-time"><?=$settings->getValue('grafik')?></p>
+			</div>
+
+			<div class="page-header__cart">
+				<a href="<?= $this->getCommonVar('mydomain').'/emarket/cart/'?>" class="page-header__cart-button">
+					<span class="page-header__cart-number">
+                        <?=$output_basket['total-amount'];?>
+                    </span>
+					<svg width="27" height="25" viewBox="0 0 25 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g filter="url(#filter0_d)">
+						<path d="M20.5723 5.78965H13.3672L10.0137 1.35453C9.88086 1.14181 9.69271 1.02482 9.44922 1.00355C9.20573 0.982274 8.97331 1.05672 8.75195 1.2269C8.41992 1.56724 8.39779 1.90759 8.68555 2.24793L11.3086 5.78965H6.42773C6.0293 5.78965 5.69173 5.9226 5.41504 6.18849C5.13835 6.45438 5 6.76814 5 7.12976V7.83172C5 8.42732 5.28776 8.83148 5.86328 9.0442L7.82227 14.8194C7.91081 15.1172 8.08789 15.3884 8.35352 15.6331C8.61914 15.8777 8.91797 16 9.25 16H17.75C18.082 16 18.3809 15.8777 18.6465 15.6331C18.9121 15.3884 19.0892 15.1172 19.1777 14.8194L21.1367 9.10801C21.7122 8.8953 22 8.49114 22 7.89553V7.19357C22 6.78941 21.8617 6.45438 21.585 6.18849C21.3083 5.9226 20.9707 5.78965 20.5723 5.78965ZM6.42773 7.12976H12.3711L12.8691 7.7679C12.9134 7.7679 12.9355 7.78918 12.9355 7.83172H6.42773V7.12976ZM17.8164 14.4365V14.5004C17.8164 14.5216 17.8053 14.5429 17.7832 14.5642C17.7611 14.5854 17.75 14.6067 17.75 14.628H9.31641C9.27214 14.628 9.25 14.5854 9.25 14.5004L7.42383 9.17183H19.5762L17.8164 14.4365ZM14.1309 7.83172C14.2858 7.57646 14.3633 7.34247 14.3633 7.12976H20.5723V7.83172H14.1309ZM9.94727 13.4155C9.9694 13.5644 10.0579 13.692 10.2129 13.7984C10.3678 13.9048 10.5228 13.9579 10.6777 13.9579H10.8105C10.9876 13.9154 11.1315 13.809 11.2422 13.6389C11.3529 13.4687 11.375 13.2985 11.3086 13.1283L10.6113 10.4162C10.5671 10.246 10.4564 10.1078 10.2793 10.0014C10.1022 9.89506 9.92513 9.87379 9.74805 9.9376C9.57096 9.98015 9.42708 10.0865 9.31641 10.2567C9.20573 10.4268 9.18359 10.5864 9.25 10.7353L9.94727 13.4155ZM16.1895 13.9579H16.3223C16.4772 13.9579 16.6322 13.9048 16.7871 13.7984C16.9421 13.692 17.0306 13.5644 17.0527 13.4155L17.75 10.6715C17.7943 10.5013 17.7666 10.3311 17.667 10.161C17.5674 9.99078 17.429 9.89506 17.252 9.87379C16.7871 9.7887 16.4993 9.94824 16.3887 10.3524L15.6914 13.0645C15.5586 13.49 15.7246 13.7878 16.1895 13.9579ZM13.5 13.9579C13.9648 13.9579 14.1973 13.7239 14.1973 13.256V10.5438C14.1973 10.0971 13.9648 9.87379 13.5 9.87379C13.0352 9.87379 12.8027 10.0971 12.8027 10.5438V13.256C12.8027 13.7239 13.0352 13.9579 13.5 13.9579Z" fill="white"/>
+						</g>
+						<defs>
+						<filter id="filter0_d" x="0" y="0" width="27" height="25" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+						<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+						<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+						<feOffset dy="4"/>
+						<feGaussianBlur stdDeviation="2.5"/>
+						<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+						<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+						<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+						</filter>
+						</defs>
+					</svg>
+				</a>
+			</div>
+	</div>
+</header>
+<!-- /Шапка -->

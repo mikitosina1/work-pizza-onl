@@ -1,0 +1,268 @@
+<?php
+/**
+ * Страница товара.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+ 
+//Основной класс иерархической модели данных. Для доступа к стр сайта.
+$hierarchy = umiHierarchy::getInstance();
+// Побочный эффект: страница товара добавляется в список недавно посещенных страниц
+$this->macros('content', 'addRecentPage', [$variables['pageId']]);
+// Ранее смотрели
+$seen = $this->getRecentlyVisitedProducts();
+
+//Получение информации из объекта иерархии
+$page = $variables['page'];
+
+
+//Информация о товаре
+$name = $page->getName();
+$price = $page->getValue('price');
+$size = $page->getValue('razmer');
+$photo = $this->getCommonVar('mydomain').$page->getValue('photo');
+$link = $this->getCommonVar('mydomain').$page->link;
+$sostav = $page->getValue('sostav');
+$text = '';
+$ves = $page->getValue('ves');
+$recommended_items = $page->getValue('recommended_items');
+$idElement = $page->id;
+
+//Достали объекты иерархии, из которых по их id далее достанем объекты
+$toping = $page->getValue('dopy_in');
+//Достаём сами позиции (объекты) но не все (кроме веса, его не было)
+if(isset($toping['0'])){
+$objects = $this->macros('catalog', 'getSmartCatalog', array(null, $toping['0']->id, 25, null, 2));
+}
+
+
+
+//Макрос для отображения содержимого заказа в корзину
+$output_order = $this->macros('emarket', 'cart');
+$item_inside = $output_order['items'];
+$item_array = array();
+foreach($item_inside as $item_value){
+    $item_array[$item_value['element_id']] = 1;
+}
+
+
+//Проверка допов кукис
+if(isset($toping[0])):
+    //COOCKIES
+    $cootopping = $_COOKIE['cookie_for_order_smth'];
+
+
+?>
+<div style="display: none;">
+<?php 
+        //Выведение id кукис
+        $string_of_coo = substr($cootopping,0,-3);
+        $every_coo = explode("|||", $string_of_coo);
+        $idarray = array();
+        foreach($every_coo as $value){
+            $element_of_coo = explode("#", $value);
+            if($element_of_coo['0'] == $idElement){
+                $idarray[$element_of_coo['1']] = $element_of_coo['2']; 
+            } 
+        }
+        
+?>
+<?php endif;?>
+</div>
+<section class="product">
+	<div class="product__wrapper wrapper">
+		<h1 class="product__title title"><?=$name;?></h1>
+			<!-- Продукт -->
+		<div class="product__inner">
+			<!-- Фото продукта -->
+			<div class="product__image">
+				<picture>
+					<!--</a><source type="image/webp" srcset="img/goods/losos.webp" />-->
+					<img src="<?=$photo;?>" width="425" height="356" alt="<?=$name;?>" />
+                        <div class="good__image-icon">
+                        <?php if($page->getValue('best_offers')):?>
+        				<span class="good__icon" title="Лучшее">
+        					<svg width="30" height="28">
+        	                   <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#star"></use>
+        	               </svg>
+        				</span>
+                        <?php endif;?>
+                        
+                        <?php if($page->getValue('ostroe')):?>
+        				<span class="good__icon" title="Острое">
+        					<svg width="30" height="30">
+        	            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#hot"></use>
+        	          </svg>
+        				</span>
+                        <?php endif;?>
+                        
+                        <?php if($page->getValue('vegetarianskoe')):?>
+        				<span class="good__icon" title="Вегетаринское">
+        					<svg width="30" height="30">
+        	            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#vegan"></use>
+        	          </svg>
+        				</span>
+                        <?php endif;?>
+                        
+                        <?php if($page->getValue('hit')):?>
+        				<span class="good__icon" title="Хит">
+        					<svg width="30" height="27">
+        	            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#like"></use>
+        	          </svg>
+        				</span>
+                        <?php endif;?>
+                        
+                        <?php if($page->getValue('new')):?>
+                        <span class="good__icon" title="Новинка">
+        				    <svg width="30" height="17">
+                                <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#new"></use>
+                            </svg>
+                        </span>
+                        <?php endif;?>
+        				</picture>
+        			</div>
+            </div>
+			<!-- /Фото продукта -->
+				
+				<!-- Состав -->
+			<div class="product__composition">
+				<h2 class="product__list-title">Состав</h2>
+				<ul class="product__composition-list">
+                <?php foreach($sostav as $value):?>
+					<li><?= $this->get_sprav($value);?></li>
+                <?php endforeach;?>
+				</ul>
+			</div>
+			<!-- /Состав -->
+
+			<div class="product__buy">
+				<div class="product__size">
+					<ul class="product__size-list">
+                        <?php if($size != ''):?>
+						<li>
+							<span class="product__size-value product__size-value--active"><?=$size;?></span>
+						</li>
+                        <?php endif;?>
+                        <?php if($ves != ''):?>
+                        <li>
+							<span class="product__size-value product__size-value--active"><?=$ves;?></span>
+						</li>
+                        <?php endif;?>
+					</ul>
+				</div>
+                	<!-- ЦЕНА -->
+					<p class="product__price"><?=$price?> ₽</p>
+                    <!-- /ЦЕНА -->
+                    <?php if(isset($item_array[$idElement])):?>
+                    <?php 
+                        
+                        $tov_val = $this->count_k($idElement,$output_order);
+                    ?>
+					<div class="product__quantity quantity quantity--dark" data-product="<?=$idElement;?>">
+						<button class="quantity__button">
+							<svg width="16" height="2">
+                                <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#minus"></use>
+                            </svg>
+						</button>
+						<input type="text" value="<?=$tov_val?>" class="quantity__number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 && /^\d{0,3}$/.test(this.value));"/>
+						<button class="quantity__button quantity__button--more">
+							<svg width="16" height="16">
+                                <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#plus"></use>
+                            </svg>
+						</button>
+					</div>
+                    <?php endif;?>
+                    <?php if(!isset($item_array[$idElement])):?>
+					<a href="/emarket/basket/put/element/<?=$idElement;?>" class="product__button basket button">в корзину</a>
+                    <?php endif;?>
+			</div>
+		</div>
+		<!-- /Продукт -->
+        <!-- Топпинг -->
+        <?php if(isset($toping['0'])):?>
+		<div class="product__toping toping"  data-idproperty="<?=$idElement?>">
+			<h2 class="product__subtitle toping__title">Добавить топпинги:
+                <span>(Положите товар в корзину)</span>
+            </h2>
+
+			<form action="" class="product__toping-form toping__form">
+				<div class="product__checkbox-list toping__checkbox-list">
+                    <?php foreach($objects['lines'] as $value):
+                            
+                            $checked = isset($idarray[$value['id']]) ? "checked='checked'" : '';
+                            $active = isset($idarray[$value['id']]) ? " activem" : '';
+                            $valuetopp = isset($idarray[$value['id']]) ? $idarray[$value['id']] : 1;
+                    
+                        $dop = $hierarchy->getElement($value['id']);
+                        $topping_price = $dop->getValue('price');
+                        $topping_name = $dop->getName();
+                        $count_toping_v_korzine = $this->count_k($value['id'],$output_order);
+                    ?>
+					<div class="product__checkbox-item<?=$active?> toping__checkbox checkbox">
+                        
+                        <label class="product__label toping__label checkbox__label">
+                        <input type="checkbox" name="toping" data-course="<?=$valuetopp?>" data-count="<?=$count_toping_v_korzine?>" data-href="/emarket/basket/put/element/<?=$dop?>" data-idtovara="<?=$idElement?>" id="<?=$dop?>" <?=$checked;?> class="product__checkbox toping__input checkbox__input" value="<?=$dop?>" disabled="disabled">
+        				<span class="checkbox__inner">
+        					<span class="product__toping-name toping__name"><?=$topping_name?></span>
+        					<span class="product__toping-price toping__price" data-price="<?=$topping_price?>"><?=$topping_price?> ₽</span>
+                        </span>
+                        </label>
+        				<div class="wrap__the__quantity" hidden="true">
+                            <div class="topping__quantity quantity quantity--dark">
+                            	<button class="quantity__button_plus minus_k">
+                            		<svg width="16" height="2">
+                                        <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#minus"></use>
+                                    </svg>
+                            	</button>
+                            	<input type="text" value="<?=$valuetopp?>" data-count="<?=$count_toping_v_korzine?>" class="quantity__number" />
+                            	<button class="quantity__button_plus">
+                            		<svg width="16" height="16">
+                                        <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#plus"></use>
+                                    </svg>
+                            	</button>
+                            </div>
+                        </div>
+                     </div>
+                     <?php endforeach;?>
+				</div>
+			</form>
+		</div>
+        <?php endif;?>
+        <!-- /Топпинг -->
+	</div>
+</section>
+
+<!-- Рекомендуем -->
+<section class="recomendation">
+    <?php if(count($recommended_items)):?>
+	<div class="recomendation__wrapper wrapper">
+		<h2 class="recomendation__title">Рекомендуем попробовать</h2>
+
+		<ul class="recomendation__list">
+			<!-- Товар 1 -->
+            <?php foreach($recommended_items as $value):?>
+      	     <?= $this->render($value->id, 'catalog/product/preview/index')?>
+            <?php endforeach;?>
+		</ul>
+	</div>
+    <?php endif;?>
+</section>
+<!-- /Рекомендуем -->
+
+<!-- Ранее смотрели -->
+<section class="recomendation">
+    <?php if(count($seen)):?>
+	<div class="recomendation__wrapper wrapper">
+		<h2 class="recomendation__title">Ранее смотрели</h2>
+
+		<ul class="recomendation__list">
+			<!-- Товар 1 -->
+            <?php foreach($seen as $seenvalue):?>
+      	     <?= $this->render($seenvalue->id, 'catalog/product/preview/index')?>
+            <?php endforeach;?>
+		</ul>
+	</div>
+    <?php endif;?>
+</section>
+<!-- /Рекомендуем -->

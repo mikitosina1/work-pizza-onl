@@ -1,0 +1,145 @@
+<?php
+/**
+ * Главная страница:
+ *   - Блок со слайдером
+ *   - Блок акции с таймером
+ *   - Блок "Наши преимущества"
+ *   - Блок с новостями и опросом
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+$variables['pageId'] = 228;
+$catalog = $this->getChildCategories($variables);
+$childCategoryList = $catalog['lines'];
+
+//Приложение
+$bestprod = $this->getBestProducts();
+?>
+<div class="intro">
+    <div class="intro__wrapper wrapper">
+    	
+    	<div class="intro__column">
+    		<!-- Баннер -->
+    		<div class="intro__banner banner">
+    			<ul class="banner__list">
+    				<li class="banner__item">
+    					<span class="banner__image">
+    						<picture>
+    							<source type="image/webp" srcset="img/banner-1.webp">
+    		  					<img src="img/banner-1.png" width="440" height="310" alt="" />
+    		  				</picture>
+    					</span>
+    
+    					<p class="banner__description">Три пиццы за 1197 ₽</p>
+    				</li>
+    
+    				<li class="banner__item">
+    					<span class="banner__image">
+    						<picture>
+    							<source type="image/webp" srcset="img/banner-2.webp">
+    		  					<img src="img/banner-2.png" width="440" height="380" alt="" />
+    		  				</picture>
+    					</span>
+    
+    					<p class="banner__description">Три бургера за 888 ₽</p>
+    				</li>
+    
+    				<li class="banner__item">
+    					<span class="banner__image">
+    						<picture>
+    							<source type="image/webp" srcset="img/banner-3.webp">
+    		  					<img src="img/banner-3.png" width="520" height="460" alt="" />
+    		  				</picture>
+    					</span>
+    
+    					<p class="banner__description">15% скидка в День Рождения</p>
+    				</li>
+    			</ul>
+    		</div>
+    		<!-- /Баннер -->
+    	</div>
+    
+    	<!-- Навигация -->
+    	<div class="intro__nav site-nav">
+			<ul class="site-nav__list">
+                <?= $this->render($childCategoryList, 'menu/pmenu') ?>
+			</ul>
+    	</div>
+    	<!-- /Навигация -->
+    </div>
+    </div>
+    
+    <?= $this->render($variables, 'menu/catmenu') ?>
+    
+    <!-- Популярные блюда -->
+    <section class="popular-goods">
+    <div class="popular-goods__wrapper wrapper">
+    	<h2 class="popular-goods__title title">Популярные блюда</h2>
+    	<ul class="popular-goods__list">
+            <?php foreach($bestprod as $value):?>
+      	         <?= $this->render($value->id, 'catalog/product/preview/index')?>
+            <?php endforeach;?>
+      
+    	</ul>
+    </div>
+    </section>
+    <!-- /Популярные блюда -->
+    
+    <!-- Акции -->
+    <section class="action-section">
+    <div class="action-section__wrapper wrapper">
+    	<h2 class="action-section__title title">Акции</h2>
+    
+    	<ul class="action-section__list">
+    		<li class="action-section__item">
+    			<svg width="80" height="80">
+            <use xlink:href="img/sprite.svg#action-1"></use>
+          </svg>
+    
+          <span class="action-section__description">Три пиццы за 1197 ₽</span>
+    		</li>
+    		<li class="action-section__item">
+    			<svg width="80" height="80">
+            <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#action-2"></use>
+          </svg>
+    
+          <span class="action-section__description">Минус 20% на всю пиццу с собой</span>
+    		</li>
+    		<li class="action-section__item">
+    			<svg width="80" height="80">
+            <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#action-3"></use>
+          </svg>
+    
+          <span class="action-section__description">Подарок при заказе доставки от 1000 ₽</span>
+    		</li>
+    		<li class="action-section__item">
+    			<svg width="80" height="80">
+            <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#action-4"></use>
+          </svg>
+    
+          <span class="action-section__description">Доставка по Ладожскому парку бесплатно</span>
+    		</li>
+    	</ul>
+    </div>
+    </section>
+    <!-- /Акции -->
+    
+    <!-- Доставка -->
+    <section class="delivery-section">
+    <div class="delivery-section__wrapper wrapper">
+    	<h2 class="delivery-section__title title">Доставка</h2>
+    
+    	<ul class="delivery-section__zone-list">
+    		<li><span>Зона бесплатной доставки</span></li>
+    		<!--<li><span>При заказе от 900 рублей доставка по синей зоне бесплатная</span></li>
+    		<li><span>При заказе от 450 рублей доставка по зеленой зоне бесплатная</span></li>-->
+    	</ul>
+    
+    	<div class="delivery-section__map">
+        <!--Якарта-->
+    		<script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A365ce955b87372f71fe3675b7779017368e688ecc5d8e3f0266875c019655ffe&amp;width=100%25&amp;height=600&amp;lang=ru_RU&amp;scroll=false"></script>
+    	</div>
+    </div>
+    </section>
+    <!-- /Доставка -->

@@ -1,0 +1,37 @@
+<?php
+/**
+ * Категория товаров.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+ //создание элемента хиерархии
+ $hierarchy = umiHierarchy::getInstance();
+ 
+//Запись в переменную $page элемента иерархии
+$page = $variables['page'];
+
+$objects = $this->macros('catalog', 'getSmartCatalog', array(null, $page->getId(), 500, null, 2));
+
+$massive = array();
+foreach($objects['lines'] as $lvalue){
+    $tov = $hierarchy->getElement($lvalue['id']);
+    $par_id = $tov->getParentId();
+    $massive[$par_id][]= $lvalue['id'];
+}
+?>
+<div class="goods__wrapper wrapper">
+    <?php 
+            foreach($massive as $key => $val):
+                $parent_tov = $hierarchy->getElement($key);
+    ?>
+	<h2 class="goods__title title"><?= $parent_tov->getName();?></h2>
+	<ul class="goods__list">
+		<!--Товар-->
+      <?php foreach($val as $value):?>
+      	  <?= $this->render($value, 'catalog/product/preview/index')?>
+      <?php endforeach;?>
+		<!--/Товар-->
+	</ul>
+    <?php endforeach;?>
+</div>

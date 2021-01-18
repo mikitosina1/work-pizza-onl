@@ -1,0 +1,16 @@
+<?php
+/**
+ * Футер меню.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+?>
+
+<?php foreach($variables['item'] as $values):?>
+
+<li class="site-list__item">
+    <a href="<?= $values['link'];?>"><?=$values['name'];?></a>
+</li>
+
+<?php endforeach;?>

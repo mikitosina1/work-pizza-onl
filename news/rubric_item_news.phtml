@@ -1,0 +1,32 @@
+<?php
+/**
+ * НОВОСТЬ.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ * @var iUmiHierarchyElement $newsItem
+ */
+ // получаем экземпляр коллекции
+ $hierarchy = umiHierarchy::getInstance();
+  
+$some_naws = $this->macros('news', 'lastlist', array('news1', null, null, true));
+$info_from_naws = $some_naws['items'];
+?>
+
+
+<?foreach($info_from_naws as $value):
+    $page = $hierarchy->getElement($value['id']);
+    $anons_pic = $page->getValue('anons_pic');
+?>
+<li class="action__item">
+	<a href="<?=$value['link']?>" class="action__image">
+		<picture>
+			<!--<source type="image/webp" srcset="">-->
+			<img src="<?=$anons_pic?>" alt="" / >
+		</picture>
+	</a>
+	<div class="action__content">
+		<a href="<?=$value['link']?>" class="action__name"><?=$value['name']?></a>
+	</div>
+</li>
+<?php endforeach;?>

@@ -1,0 +1,331 @@
+<?php
+/**
+ * Непустая корзина:
+ *   - Заголовок с названиями колонок
+ *   - Список товаров
+ *   - Блок "Оформить заказ"
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+//$amount = $emarket->getBasketItemAmount($itemId);
+//Макрос для отображения содержимого заказа в корзину
+$output_order = $this->macros('emarket', 'cart');
+$variables = $this->macros('emarket', 'purchasing_one_step');
+
+
+//Выводим заказ
+$output_order_items = $output_order['items'];
+
+
+//Вывод покупателя
+$customer_inside = $variables['onestep']['customer'];
+$customer_group = $customer_inside['group'];
+//Вывод суммы
+$sum_money_order_items = $output_order['summary'];
+//Оплата
+$payment = $variables['onestep']['payment'];
+//Выбор способа доставки
+$delivery = $variables['onestep']['delivery_choose'];
+//Вывод адреса доставки
+$delivery_id = $variables['onestep']['delivery']['type_id'];
+$delivery_form  = $this->getCreateForm($delivery_id);
+
+$delivery_form_fild = $delivery_form['groups'][0]['fields'];
+
+
+//COOCKIES
+$cootopping = $_COOKIE['cookie_for_order_smth'];
+
+//HIERARCHY ELEMENT
+$hierarchy = umiHierarchy::getInstance();
+//HIERARCHY CHILD
+$children = $hierarchy->getChildrenTree(328, true, true, 1);
+$array_for_chlidren = array();
+
+foreach($children as $key => $valchild){
+    $array_for_chlidren[$key] = 1;
+}
+?>
+              
+<div style="display: none;">
+<?php 
+        //Выведение id кукис
+        $string_of_coo = substr($cootopping,0,-3);
+        $every_coo = explode("|||", $string_of_coo);
+        $topidarray = array();
+        foreach($every_coo as $value){
+            $element_of_coo = explode("#", $value);
+            $topidarray[$element_of_coo['0']][$element_of_coo['1']] = $element_of_coo['2'];
+        }  
+        
+?>
+</div>
+
+<!-- Заказ -->
+<section class="cart">
+	<div class="cart__wrapper wrapper">
+
+		<div class="cart__inner">
+			<ul class="cart__list">
+				<!-- Товар в корзине -->
+                <?php  foreach($output_order_items as $ooivalue):
+                         $ElementHierarchy = $ooivalue['page'];
+                         $item_from_hierarchy = $ElementHierarchy->getValue('photo');
+                         $element_id_from_menu = $ElementHierarchy->getId();
+                         $parent_id = $ElementHierarchy->getParentId();
+                         
+                         $classnone = isset($array_for_chlidren[$parent_id])? "visually-hidden":'';
+                        
+                         $flag = isset($topidarray[$element_id_from_menu])? true : false;
+                ?>
+
+				<li class="cart__item m<?=$element_id_from_menu?> <?=$classnone?>" data-idtovv="<?=$element_id_from_menu?>" id="<?= $ooivalue['id']?>">
+					
+                <div class="prod_wrapper_z">
+                    <a href="<?= $this->getCommonVar('mydomain')?><?= $ElementHierarchy->link?>" class="cart__image">
+						<img src="<?= $item_from_hierarchy;?>" width="150" height="120" alt="" /> 
+					</a>
+
+					<a href="<?= $this->getCommonVar('mydomain')?><?= $ElementHierarchy->link?>" class="cart__name"><?= $ooivalue['name'];?></a>
+
+					<div class="cart__quantity quantity quantity--dark" data-product="<?=$element_id_from_menu;?>">
+							<button class="quantity__button quantity__button--less">
+								<svg width="16" height="2">
+			                         <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#minus"></use>
+			                     </svg>
+							</button>
+							<input type="text" value="<?= $ooivalue['amount'];?>" class="quantity__number"  onkeypress="return (event.charCode >= 48 && event.charCode <= 57 && /^\d{0,3}$/.test(this.value));"/>
+							<button class="quantity__button quantity__button--more">
+								<svg width="16" height="16">
+			                         <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#plus"></use>
+			                     </svg>
+							</button>
+						</div>
+
+						<span class="cart__price"><?= $ooivalue['total-price']['actual'];?> ₽</span>
+
+						<span class="cart__delete">
+							<svg width="15" height="15">
+		                          <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#delete"></use>
+                            </svg>
+						</span>
+                    </div>
+                        
+                        
+                        
+                     <?php if($flag):
+                                $sum = 0;
+                     ?>
+                        <div class="topping_i_p_wrapper">
+                            <div class="topping_i_p_wrapper_dop">
+                                <div class="topping_i_p">Топпинги:</div>
+                        <?php foreach($topidarray[$element_id_from_menu] as $key =>$value):?>
+                        <?php $elem_of_topping = $hierarchy->getElement($key);
+                              $topping_name = $elem_of_topping->getName();
+                              $topping_price = $elem_of_topping->getValue('price');
+                              $dop = $key;
+                              $idElement = $element_id_from_menu;
+                              $sum += $topping_price*$value;
+                              
+                              
+                              
+                              $count_toping_v_korzine = $this->count_k($dop,$output_order);
+                        ?>
+                        
+                        <!-- Топпинг -->
+                         <div class="product__checkbox-item<?=$active?> toping__checkbox checkbox">
+                            <label class="product__label toping__label checkbox__label">
+                            <input type="checkbox" name="toping" data-course="<?=$value?>" data-count="<?=$count_toping_v_korzine?>" data-href="http://livepizza.ru/emarket/basket/put/element/<?=$dop?>" data-idtovara="<?=$idElement?>" id="<?=$dop?>" checked="checked" class="product__checkbox toping__input checkbox__input" value="<?=$dop?>">
+            				<span class="checkbox__inner">
+            					<span class="product__toping-name toping__name"><?=$topping_name?></span>
+            					<span class="product__toping-price toping__price" data-price="<?=$topping_price?>"><?=$topping_price*$value?> ₽</span>
+                            </span>
+                            </label>
+            				<div class="wrap__the__quantity" hidden="true">
+                                <div class="topping__quantity quantity quantity--dark">
+                                	<button class="quantity__button_plus minus_k">
+                                		<svg width="16" height="2">
+                                            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#minus"></use>
+                                        </svg>
+                                	</button>
+                                	<input type="text" value="<?=$value?>" class="quantity__number quantity__topping"/>
+                                	<button class="quantity__button_plus">
+                                		<svg width="16" height="16">
+                                            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#plus"></use>
+                                        </svg>
+                                	</button>
+                                </div>
+                            </div>
+                         </div>
+                        <?php endforeach;?>
+                            </div>
+                            <div class="topping_i_p_sum">Сумма с учётом топпингов:<span> <?=$sum+$ooivalue['total-price']['actual'];?> ₽</span></div>
+                        </div>
+                        
+                     <?php endif;?>
+                    <!-- /Топпинг -->
+                     
+                     
+                     
+                     
+				</li>
+                <?php endforeach;?>
+				<!-- /Товар в корзине -->
+			</ul>
+			<p class="cart__itog">ИТОГО к оплате: <span class="cart__itog-value"><?=$sum_money_order_items['price']['actual'];?> ₽</span></p>
+          </div>
+	</div>
+</section>
+<!-- /Заказ -->
+	
+	<!-- Оформление -->
+<section class="oformlenie">
+	<div class="oformlenie__wrapper wrapper">
+		<form action="/emarket/saveInfo/" class="oformlenie__form">
+			<div class="oformlenie__form-inner">
+				<!-- Вариант доставки -->
+				<fieldset class="oformlenie__box">
+					<legend class="visually-hidden">
+						Вариант доставки
+					</legend>
+        
+					
+				<div class="oformlenie__row">
+                <?php foreach ($delivery as $delkey => $deltypes):
+                        $delchecked = $delkey == 0 ? "delchecked=delchecked" : '';
+                    ?>
+					<div class="oformlenie__radio-item radio">
+			              <input type="radio" name="delivery-id" id="<?=$deltypes['id'];?>" <?=$delchecked;?> class="oformlenie__radio radio__input" value="<?=$deltypes['id'];?>" checked="">
+			              <label for="<?=$deltypes['id'];?>" class="oformlenie__label oformlenie__label--delivery radio__label ">
+			              	<span class="oformlenie__label-name"><?=$deltypes['name'];?></span>
+			              </label>
+                    </div>
+                 <?php endforeach;?>
+				</div>			
+				</fieldset>
+				<!-- /Вариант доставки -->
+					<div class="oformlenie__row-box">
+						<!-- Контактные данные -->
+  					<fieldset class="oformlenie__box oformlenie__box--contact">
+  						<legend class="oformlenie__title">Контактные данные:</legend>
+
+                        <input type="hidden" name="delivery-address" value="new" checked="checked"/>
+                        <?php foreach ($customer_group as $cuskey):?>
+                            <?php foreach($cuskey['fields'] as $cusmain):?>
+		  						<div class="oformlenie__field-box">
+          			                   <label for="contact-name"><?=$cusmain['title'];?></label>
+			                          <input type="text" id="<?=$cusmain['input_name'];?>" name="<?=$cusmain['input_name'];?>" class="oformlenie__field field" min="2" max="20" />
+			                     </div>
+                            <?php endforeach;?>
+                        <?php endforeach;?>
+	            <div class="oformlenie__field-box oformlenie__field-box--promo">
+	              <label for="contact-promocode">Введите промокод</label>
+	              <input type="text" id="contact-promocode" name="promocode" class="oformlenie__field field" />
+
+	              <input type="button" class="oformlenie__button button" value="Применить Промокод" />
+	            </div>
+  					</fieldset>
+  					<!-- /Контактные данные -->
+						
+						<!-- Оплата -->
+  					<fieldset class="oformlenie__box oformlenie__box--pay">
+  						<legend class="oformlenie__title">
+  							Оплата:
+  						</legend>
+                        <?php foreach ($payment as $key => $coins):
+                        $checked = $key == 0 ? "checked=checked" : '';
+                        ?>
+  						<div class="oformlenie__radio-item radio">
+	              <input type="radio" name="payment-id" id="<?=$coins['id'];?>" <?=$checked;?> class="oformlenie__radio radio__input" value="<?=$coins['id'];?>">
+	              <label for="<?=$coins['id'];?>" class="oformlenie__label radio__label">
+	              	<span class="oformlenie__label-name"><?=$coins['name'];?></span>
+	              </label>
+	            </div>
+                        <?php endforeach;?>
+  					</fieldset>
+  					<!-- /Оплата -->
+				</div>
+
+				<!-- Адрес -->
+				<fieldset class="oformlenie__box oformlenie__box--address">
+					<legend class="oformlenie__title">
+						Адрес доставки:
+					</legend>
+						<div class="oformlenie__row-box">
+							<div class="oformlenie__column">
+								<?php foreach($delivery_form_fild as $adress_key)://print_r($adress_key);?>
+                                    <?php if($adress_key['title'] == 'Улица'):?>
+		  							<div class="oformlenie__field-box oformlenie__field-box--large">
+				                        <label for="street"><?=$adress_key['title'];?></label>
+				                        <input type="text" id="<?=$adress_key['id']?>" name="<?=$adress_key['input_name'];?>" class="oformlenie__field field field--large" />
+				                    </div>
+                                    <?php endif;?>
+                                <?php if($adress_key['title'] == 'Не звонить в домофон'):?>
+    				            <div class="oformlenie__radio-item oformlenie__radio-item--domofon radio">
+    				              <input type="checkbox" name="<?=$adress_key['input_name'];?>" id="<?=$adress_key['id']?>" class="oformlenie__radio radio__input" value="<?=$adress_key['value'];?>">
+    				              <label for="<?=$adress_key['id']?>" class="oformlenie__label radio__label">
+    				              	<span class="oformlenie__label-name"><?=$adress_key['title'];?></span>
+    				              </label>
+    				            </div>
+                                <?php endif;?>
+                                
+                                <?php if($adress_key['title'] == 'Без звонка оператора'):?>
+    				            <div class="oformlenie__radio-item oformlenie__radio-item--managerCall radio">
+    				              <input type="checkbox" name="<?=$adress_key['input_name'];?>" id="<?=$adress_key['id']?>" class="oformlenie__radio radio__input" value="<?=$adress_key['value'];?>">
+    				              <label for="<?=$adress_key['id']?>" class="oformlenie__label radio__label">
+    				              	<span class="oformlenie__label-name"><?=$adress_key['title'];?></span>
+    				              </label>
+    				            </div>
+                                <?php endif;?>
+                            <?php endforeach;?>	
+  						    </div>
+  						<div class="oformlenie__column oformlenie__column--mini-fields">
+                        <?php foreach($delivery_form_fild as $adress_key1):?>
+                       <?php if($adress_key1['title'] != 'Улица' && $adress_key1['title'] != 'Комментарий к заказу' && $adress_key1['title'] != 'Не звонить в домофон' && $adress_key1['title'] != 'Без звонка оператора' && $adress_key1['title'] != 'Я ознакомлен'):?>
+                            <div class="oformlenie__field-box">
+				              <label for="corpus"><?=$adress_key1['title'];?></label>
+				              <input type="text" id="corpus" name="<?=$adress_key1['input_name'];?>" class="oformlenie__field field field--mini" />
+				            </div>
+                        <?php endif;?>
+                    <?php endforeach;?>	
+	          	          </div>
+						</div>
+				</fieldset>
+				<!-- /Оплата -->
+
+				<!-- Адрес -->
+				<fieldset class="oformlenie__box">
+					<legend class="oformlenie__title">
+						Комментарий к заказу:
+					</legend>
+						<div class="oformlenie__row">
+                        <?php foreach($delivery_form_fild as $key =>$adress_key2):?>
+                            <?php $checked = $key == 0 ? "checked=checked" : '';?>
+                       <?php if($adress_key2['title'] == 'Комментарий к заказу'):?>
+							<div class="oformlenie__column oformlenie__column--comment">
+								<textarea name="<?=$adress_key2['input_name'];?>" id="oformlenie-comment" cols="30" rows="10" class="oformlenie-comment"></textarea>
+								<div class="oformlenie__checkbox-item checkbox">
+                        <?php elseif($adress_key2['title'] == 'Я ознакомлен'): //print_r($adress_key2);?>
+		              <input type="checkbox" name="<?=$adress_key2['input_name'];?>" id="<?=$adress_key2['id'];?>" class="oformlenie__checkbox checkbox__input" <?=$checked?> value="<?=$adress_key2['value']?>">
+		              <label for="<?=$adress_key2['id'];?>" class="oformlenie__label oformlenie__label--soglashenie checkbox__label">
+		              
+                      	<span>Я ознакомлен с содержанием пользовательского соглашения и принимаю условия обработки персональных данных</span>
+		              </label>
+		                        </div>
+							</div>
+                        <?php endif;?>
+                    <?php endforeach;?>	
+							<div class="oformlenie__column oformlenie__column--button">
+								<input type="submit" class="oformlenie__submit button" value="оформить заказ">
+							</div>
+						</div>
+					
+				</fieldset>
+				<!-- /Адрес -->
+			</div>
+				
+		</form>
+	</div>
+</section>
+<!-- /Оформление -->

@@ -1,0 +1,38 @@
+<?php  foreach($output_order_items as $ooivalue):
+     $ElementHierarchy = $ooivalue['page'];
+     $item_from_hierarchy = $ElementHierarchy->getValue('photo');
+     $element_id_from_menu = $ElementHierarchy->getId();
+    
+?>
+<?php //if(isset($_COOKIE['cookie_for_order_smth'])):?>
+<li class="cart__item m<?=$element_id_from_menu?>" id="<?= $ooivalue['id']?>">
+	<a href="<?= $this->getCommonVar('mydomain')?><?= $ElementHierarchy->link?>" class="cart__image">
+		<img src="<?= $item_from_hierarchy;?>" width="150" height="120" alt="" /> 
+	</a>
+
+	<a href="<?= $this->getCommonVar('mydomain')?><?= $ElementHierarchy->link?>" class="cart__name"><?= $ooivalue['name'];?></a>
+
+	<div class="cart__quantity quantity quantity--dark">
+			<button class="quantity__button quantity__button--less">
+				<svg width="16" height="2">
+                     <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#minus"></use>
+                 </svg>
+			</button>
+			<input type="text" value="<?= $ooivalue['amount'];?>" class="quantity__number"  onkeypress="return (event.charCode >= 48 && event.charCode <= 57 && /^\d{0,3}$/.test(this.value));"/>
+			<button class="quantity__button quantity__button--more">
+				<svg width="16" height="16">
+                     <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#plus"></use>
+                 </svg>
+			</button>
+		</div>
+
+		<span class="cart__price"><?= $ooivalue['total-price']['actual'];?> ₽</span>
+
+		<span class="cart__delete">
+			<svg width="15" height="15">
+                  <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#delete"></use>
+            </svg>
+		</span>
+</li>
+<?php //endif;?>
+<?php endforeach;?>

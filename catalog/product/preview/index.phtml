@@ -1,0 +1,114 @@
+<?php
+/**
+ * Превью товара:
+ *   - Изображение
+ *   - Название
+ *   - Блок цены
+ *   - Дополнительные действия
+ *   - Скрытый блок с формой выбора опционных свойств, если они есть у товара.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var iUmiHierarchyElement $variables
+ */
+
+$hierarchy = umiHierarchy::getInstance();
+
+//Запись в переменную $page элемента иерархии
+$page = $hierarchy->getElement($variables);
+//print_r($page);
+//Информация о товаре
+$name = $page->getName();
+$price = $page->getValue('price');
+$size = $page->getValue('razmer');
+$opisanie = $page->getValue('opisanie');
+$photo = $this->getCommonVar('mydomain').$page->getValue('photo');
+$link = $this->getCommonVar('mydomain').$page->link;
+$sostav = $page->getValue('sostav');
+$text = '';
+$idElement = $page->id;
+?>
+<?php foreach($sostav as $sosvalue):?>
+    <?php $text .= $this->get_sprav($sosvalue).', ';?>
+<?php endforeach;?>
+<li class="goods__item good">
+		<!-- Фотография товара -->
+		<div class="good__image-box">
+			<a href="<?=$link;?>" class="good__image-link" title="<?=$name;?>">
+				<picture>
+				<!--<source type="image/webp" srcset="img/goods/losos.webp" /> -->
+					<img src="<?=$photo;?>" width="330" height="240" alt="<?=$name;?>" title="<?=$name;?>"/>
+				</picture>
+			</a>
+		</div>
+		<!-- /Фотография товара -->
+
+		<div class="good__content">
+			<a href="<?=$link;?>" class="good__name" title="<?=$name;?>"><?=$name;?></a>
+			<p class="good__description"><?=substr($text,0,-2);?></p>
+
+			<div class="good__content-icon">
+                <?php if($page->getValue('best_offers')):?>
+				<span class="good__icon" title="Лучшее">
+					<svg width="30" height="28">
+	                   <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#star"></use>
+	               </svg>
+				</span>
+                <?php endif;?>
+                
+                <?php if($page->getValue('ostroe')):?>
+				<span class="good__icon" title="Острое">
+					<svg width="30" height="30">
+	            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#hot"></use>
+	          </svg>
+				</span>
+                <?php endif;?>
+                
+                <?php if($page->getValue('vegetarianskoe')):?>
+				<span class="good__icon" title="Вегетарианское">
+					<svg width="30" height="30">
+	            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#vegan"></use>
+	          </svg>
+				</span>
+                <?php endif;?>
+                
+                <?php if($page->getValue('hit')):?>
+				<span class="good__icon" title="Хит">
+					<svg width="30" height="27">
+	            <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#like"></use>
+	          </svg>
+				</span>
+                <?php endif;?>
+                
+                <?php if($page->getValue('new')):?>
+                <span class="good__icon" title="Новинка">
+				    <svg width="30" height="17">
+                        <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#new"></use>
+                    </svg>
+                </span>
+                <?php endif;?>
+			</div>
+
+		<div class="good__price-box">
+            <?php if($size):?>
+			<span class="good__size"><?=$size;?></span>
+            <?php endif;?>
+			<span class="good__price"><?=$price;?> ₽</span>
+		</div>
+		<div class="good__order-box">
+			<a href="/emarket/basket/put/element/<?=$idElement;?>" class="good__button basket button" data-product="<?=$idElement;?>">в корзину</a>
+				<div class="good__quantity quantity">
+				<button class="quantity__button">
+					<svg width="16" height="2">
+                        <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#minus"></use>
+                    </svg>
+				</button>
+				<input type="text" value="1" class="quantity__number"  onkeypress="return (event.charCode >= 48 && event.charCode <= 57 && /^\d{0,3}$/.test(this.value));"/>
+				<button class="quantity__button">
+					<svg width="16" height="16">
+                        <use xlink:href="<?=$this->getCommonVar('mydomain')?><?=$this->getCommonVar('temp')?>img/sprite.svg#plus"></use>
+                    </svg>
+				</button>
+			</div>
+		</div>			
+    </div>
+</li>

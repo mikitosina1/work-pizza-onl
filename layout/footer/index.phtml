@@ -1,0 +1,60 @@
+<?php
+/**
+ * Подвал сайта.
+ *
+ * @var umiTemplaterPHP|ViewPhpExtension|DemomarketPhpExtension $this
+ * @var array $variables
+ */
+ 
+ $settings = $this->getSettingsContainer();
+?>
+<!-- Подвал -->
+<footer class="page-footer">
+	<!-- Верхняя строка -->
+	<div class="page-footer__top">
+		<div class="page-foorer__wrapper wrapper">
+			<a href="<?= $this->getCommonVar('mydomain')?>" class="page-footer__logo logo">
+				<picture>
+					<!--<source type="image/webp" srcset="img/logo/logo.webp" />-->
+					<img src="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/logo/logo.png" width="140" height="74" alt="Live Pizza" />
+				</picture>
+			</a>
+
+			<div class="page-footer__info">
+				<a href="tel:<?=$settings->getValue('telefon')?>" class="page-footer__phone phone">
+					<svg width="25" height="25">
+	            <use xlink:href="<?= $this->getCommonVar('mydomain')?><?= $this->getCommonVar('temp')?>img/sprite.svg#call"></use>
+	          </svg>
+	  				<?=$settings->getValue('telefon')?>
+				</a>
+
+				<p class="page-footer__work-time">c 11:00 до 22:00 без выходных</p>
+			</div>
+				
+				<!-- Навигация по сайту -->
+			<div class="page-footer__nav">
+				<ul class="page-footer__site-list site-list">
+                    <?=$this->render($this->macros('menu', 'draw', array('footer_menu')), 'menu/hmenu')?>
+				</ul>
+			</div>
+			<!-- /Навигация по сайту -->
+		</div>
+	</div>
+	<!-- /Верхняя строка -->
+
+	<div class="page-footer__copyright">
+		<div class="page-foorer__wrapper wrapper">
+  			<p>2020 Live & Pizza. Все права защищены</p>
+  		</div>
+	</div>
+
+	<!-- Декор подвал -->
+		<span class="page-footer__decor">
+			<picture>
+				<!--<source type="image/webp" srcset="img/bg/basil-bottom.webp" />-->
+				<img src="img/bg/basil-bottom.png" width="200" height="380" alt="" />
+			</picture>
+		</span>
+	<!-- /Декор подвал -->
+</footer>
+<!--/Подвал -->
